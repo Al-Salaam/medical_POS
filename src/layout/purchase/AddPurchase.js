@@ -1,3 +1,5 @@
+// addPurchaseReturn
+
 import React, { useEffect, useRef, useState } from "react";
 //
 import "./style.css";
@@ -99,7 +101,11 @@ export default function AddPurchase() {
       .post(ADD_PURCHASE, data)
       .then((response) => {
         setOpen(true);
-        setMessage("Succefully created purchase");
+        if (response.data.error) {
+          handleSnackbar("error", response.data.error);
+        } else {
+          handleSnackbar("success", response.data.message);
+        }
       })
       .catch((error) => {
         setOpen(true);
@@ -109,6 +115,11 @@ export default function AddPurchase() {
         setSeverity("error");
       });
   };
+  const handleSnackbar = (severity, message) => {
+    setOpen(true);
+    setSeverity(severity);
+    setMessage(message);
+  };
 
   const getStockList = () => {
     axios
@@ -116,7 +127,7 @@ export default function AddPurchase() {
       .then(function (response) {
         // if (response.data.error) {
         //   setOpen(true);
-        //   setMessage(response.data.error_msg);
+        //   setMessage(response.data.error);
         //   setSeverity("error");
         // } else {
         // setProductList(response.data.data);
@@ -152,7 +163,7 @@ export default function AddPurchase() {
       .then(function (response) {
         // if (response.data.error) {
         //   setOpen(true);
-        //   setMessage(response.data.error_msg);
+        //   setMessage(response.data.error);
         //   setSeverity("error");
         // } else {
         setSupplierList(response.data.data);
@@ -364,7 +375,41 @@ export default function AddPurchase() {
                         fullWidth
                       />
                     </Grid>
+
                     <Grid item md={1.5} px={1}>
+                      <TextField
+                        label="Expiry Date"
+                        type="date"
+                        onChange={(e) => {
+                          var selectedDate = new Date(e.target.value);
+                          var currentDate = new Date();
+
+                          // Check if the selected date is before the current date
+                          if (selectedDate < currentDate) {
+                            // Provide feedback to the user, for example:
+                            alert("Please select a future date.");
+
+                            // Set the input value back to the current date
+                            e.target.valueAsDate = currentDate;
+                            // return;
+                          } else {
+                            // Update the data if the selected date is valid
+                            var expiryDate = e.target.value;
+                            setData((currentData) =>
+                              produce(currentData, (v) => {
+                                v[index].expiryDate = expiryDate;
+                              })
+                            );
+                          }
+                        }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        fullWidth
+                      />
+                    </Grid>
+
+                    {/* <Grid item md={1.5} px={1}>
                       <TextField
                         label="Expiry Date"
                         type="date"
@@ -382,7 +427,7 @@ export default function AddPurchase() {
                         }}
                         fullWidth
                       />
-                    </Grid>
+                    </Grid> */}
                     <Grid item md={1} px={1}>
                       <TextField
                         label="Quantity"

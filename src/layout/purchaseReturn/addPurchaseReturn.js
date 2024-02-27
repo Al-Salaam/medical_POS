@@ -32,7 +32,7 @@ export default function AddPurchase() {
     tradeRate: 0,
     netTotal: "",
     status: "",
-    productCode: ""
+    productCode: "",
   });
   const [data, setData] = useState([productObject]);
   const [supplierObject, setSupplierObject] = useState({});
@@ -41,7 +41,7 @@ export default function AddPurchase() {
   const [totalProducts, setTotalProducts] = useState(0);
   const [amount, setAmount] = useState("");
   const [submittedDate, setSubmittedDate] = useState("");
-  const [code, setCode] = useState("")
+  const [code, setCode] = useState("");
   const paymentMediumList = [
     {
       id: 1,
@@ -70,28 +70,37 @@ export default function AddPurchase() {
     calculateAmountAndBags(data);
   }, []);
 
-
   const dataEntry = (data) => {
     axios
       .post(GET_PURCHASERETURN, data)
-      .then(response => {
+      .then((response) => {
         // console.log("Response", response)
-      }
-      )
+      })
+      .then((response) => {
+        if (response.data.error) {
+          handleSnackbar("error", response.data.error);
+        } else {
+          handleSnackbar("success", response.data.message);
+        }
+      })
       .catch((error) => {
         setOpen(true);
         setMessage("error: " + error);
         setSeverity("error");
       });
   };
-
+  const handleSnackbar = (severity, message) => {
+    setOpen(true);
+    setSeverity(severity);
+    setMessage(message);
+  };
   const getStockList = () => {
     axios
       .get(GET_ALL_PRODUCTS)
       .then(function (response) {
         // if (response.data.error) {
         //   setOpen(true);
-        //   setMessage(response.data.error_msg);
+        //   setMessage(response.data.error);
         //   setSeverity("error");
         // } else {
         setProductList(response.data.data);
@@ -109,7 +118,7 @@ export default function AddPurchase() {
       .then(function (response) {
         // if (response.data.error) {
         //   setOpen(true);
-        //   setMessage(response.data.error_msg);
+        //   setMessage(response.data.error);
         //   setSeverity("error");
         // } else {
         setSupplierList(response.data.data);
@@ -138,7 +147,7 @@ export default function AddPurchase() {
       // netTotal: productObject.tradeRate,
       netTotal: "",
       status: productObject.status,
-      productCode: productObject.code
+      productCode: productObject.code,
     };
     array = [...array, obj];
     setData(array);
@@ -175,19 +184,19 @@ export default function AddPurchase() {
     }
   };
   const validate = () => {
-    var companyCode = supplierObject._id
-    var paymentMode = paymentMediumObject.name
-    var totalAmount = 0
+    var companyCode = supplierObject._id;
+    var paymentMode = paymentMediumObject.name;
+    var totalAmount = 0;
     for (let i = 0; i < data.length; i++) {
-      totalAmount = totalAmount + data[i].netTotal
+      totalAmount = totalAmount + data[i].netTotal;
     }
 
     var purchaseObject = {
       purchaseReturnDetail: data,
       companyCode: companyCode,
       paymentMode: paymentMode,
-      total: totalAmount
-    }
+      total: totalAmount,
+    };
     // console.log("Data", purchaseObject)
     dataEntry(purchaseObject);
   };
@@ -196,7 +205,13 @@ export default function AddPurchase() {
       <SideBar />
       <div className="box-container">
         <Navbar />
-        <Typography variant="h6" gutterBottom style={{marginLeft:"2%", marginTop:"2%"}}>Add Purchase Return</Typography>
+        <Typography
+          variant="h6"
+          gutterBottom
+          style={{ marginLeft: "2%", marginTop: "2%" }}
+        >
+          Add Purchase Return
+        </Typography>
         <Grid item md={12}>
           <Grid item container md={12} mt={3} px={2}>
             <Grid item md={12} px={2} py={1}>

@@ -40,6 +40,11 @@ export const supplierColumn = [
     width: 150,
   },
   {
+    field: "email",
+    headerName: "Email",
+    width: 150,
+  },
+  {
     field: "phoneNumber",
     headerName: "Phone Number",
     width: 150,
@@ -54,12 +59,36 @@ export const supplierColumn = [
     headerName: "License Number",
     width: 150,
   },
+  {
+    field: "accountNumber",
+    headerName: "Account Number",
+    width: 150,
+  },
+  {
+    field: "description",
+    headerName: "Description",
+    width: 150,
+  },
 ];
 export const productColumns = [
   {
     field: "code",
     headerName: "Code",
     width: 100,
+  },
+  {
+    field: "companyCode",
+    headerName: "Company",
+    width: 250,
+    renderCell: (params) => {
+      return (
+        <>
+          <div>
+            {(params.row.companyCode && params.row.companyCode.name) || "-"}
+          </div>
+        </>
+      );
+    },
   },
   {
     field: "name",

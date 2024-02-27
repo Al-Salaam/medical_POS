@@ -31,6 +31,7 @@ export default function AddProduct() {
   const [purchaseRateError, setPurchaseRateError] = useState("");
   const [maximumRetailPriceError, setMaximumRetailPriceError] = useState("");
   const [distributerPriceError, setDistributerPriceError] = useState("");
+  const [companyError, setCompanyError] = useState("");
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -62,14 +63,14 @@ export default function AddProduct() {
     axios
       .post(ADD_PRODUCT, product)
       .then(function (response) {
-        // console.log(response);
-        // if (response.data.error) {
-        //   setOpen(true);
-        //   setMessage(response.data.error_msg);
-        //   setSeverity("error");
-        // } else {
+        console.log(response);
+        if (response.data.error) {
+          setOpen(true);
+          setMessage(response.data.error);
+          setSeverity("error");
+        } else {
         setOpen(true);
-        // setMessage(response.data.success_msg);
+        setMessage(response.data.message);
         setSeverity("success");
         setName("");
         setCode("");
@@ -81,7 +82,7 @@ export default function AddProduct() {
         setPurchaseRate("");
         setMaximumRetailPrice("");
         setDistributerPrice("");
-        // }
+        }
       })
       .catch(function (error) {
         setOpen(true);
@@ -95,7 +96,7 @@ export default function AddProduct() {
       .then(function (response) {
         // if (response.data.error) {
         //   setOpen(true);
-        //   setMessage(response.data.error_msg);
+        //   setMessage(response.data.error);
         //   setSeverity("error");
         // } else {
         setCompanyList(response.data.data);
@@ -114,7 +115,7 @@ export default function AddProduct() {
 
     var companyCode = companyObject._id;
 
-
+    setCompanyError("");
     setNameError("");
     setCodeError("");
     setPackingError("");
@@ -126,6 +127,11 @@ export default function AddProduct() {
 
 
     let isValid = true;
+
+    if (companyObject === "") {
+      setCompanyError("Enter Company");
+      isValid = false;
+    }
     if (code.trim() === "") {
       setCodeError("Enter code");
       isValid = false;
@@ -235,6 +241,7 @@ export default function AddProduct() {
                   </Box>
                 )}
               />
+                <FormHelperText style={{ color: "red" }}>{companyError}</FormHelperText>
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
