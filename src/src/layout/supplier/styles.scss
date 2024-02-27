@@ -1,0 +1,41 @@
+.list {
+  display: flex;
+  width: 100%;
+  .list-container {
+    flex: 6;
+  }
+}
+.box {
+  display: flex;
+  width: 100%;
+  .box-container {
+    flex: 6;
+
+    .form-container {
+      flex: 5;
+      margin: 20px 20px;
+      padding: 20px 20px;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}
+
+
+.dashboard {
+  display: flex;
+
+  .dashboard-container {
+    flex: 6;
+
+    .widgets,
+    .charts {
+      display: flex;
+      padding: 20px;
+      gap: 20px;
+    }
+    .charts {
+      padding: 5px 20px;
+    }
+  }
+}
