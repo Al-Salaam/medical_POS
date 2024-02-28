@@ -83,6 +83,7 @@ export default function AddExpense() {
         setSeverity("error");
       });
   };
+  // 
   const validation = () => {
     setNameError("");
     setDescriptionError("");
@@ -166,8 +167,8 @@ export default function AddExpense() {
          <FormHelperText style={{ color: "red" }}>{nameError}</FormHelperText>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
+              <TextField  
+  required
                 id="amount"
                 name="amount"
                 label="Amount"
@@ -179,7 +180,8 @@ export default function AddExpense() {
              <FormHelperText style={{ color: "red" }}>{amountError}</FormHelperText>
             </Grid>
             <Grid item xs={12} sm={12}>
-              <TextField
+              <TextField  
+  required
                 id="description"
                 name="description"
                 label="Description"
@@ -209,7 +211,15 @@ export default function AddExpense() {
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="contained" size="medium" color="error">
+                  <Button 
+                  variant="contained"
+                   size="medium"
+                    color="error"
+                    onClick={() => {
+                      setName("");
+                      setAmount("");
+                      setDescription("");
+                    }}>
                     Cancel
                   </Button>
                 </Grid>

@@ -63,7 +63,7 @@ export default function AddProduct() {
     axios
       .post(ADD_PRODUCT, product)
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         if (response.data.error) {
           setOpen(true);
           setMessage(response.data.error);
@@ -142,35 +142,35 @@ export default function AddProduct() {
       isValid = false;
     }
     if (packing.trim() === "") {
-      setPackingError("Enter address");
+      setPackingError("Enter packing");
       isValid = false;
     }
 
 
     if (strength.trim() === "") {
-      setStrengthError("Enter email");
+      setStrengthError("Enter strength");
       isValid = false;
     }
 
     if (tradeRate.trim() === "") {
-      setTradeRateError("Enter license");
+      setTradeRateError("Enter trade rate");
       isValid = false;
     }
 
   
     if (purchaseRate.trim() === "") {
-      setPurchaseRateError("Enter Descrption");
+      setPurchaseRateError("Enter purchase rate");
       isValid = false;
     }
 
     if (maximumRetailPrice.trim() === "") {
-      setMaximumRetailPriceError("Enter Descrption");
+      setMaximumRetailPriceError("Enter maximum retail price");
       isValid = false;
     }
 
     
     if (distributerPrice.trim() === "") {
-      setDistributerPriceError("Enter Account Number");
+      setDistributerPriceError("Enter distributer price");
       isValid = false;
     }
 
@@ -208,16 +208,20 @@ export default function AddProduct() {
             <Grid item xs={12} sm={8}>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField
-                required
-                label="Code"
-                fullWidth
-                variant="outlined"
-                value={code}
-                onChange={(event) => setCode(event.target.value)}
-              />
-               <FormHelperText style={{ color: "red" }}>{codeError}</FormHelperText>
-            </Grid>
+  <TextField  
+  required
+    label="Code"
+    fullWidth
+    variant="outlined"
+    value={code}
+    onChange={(event) => {
+      setCode(event.target.value);
+      setCodeError(""); // Clear the error message
+    }}
+  />
+  <FormHelperText style={{ color: "red" }}>{codeError}</FormHelperText>
+</Grid>
+
             <Grid item xs={12} sm={6} >
               <Autocomplete
                 options={companyList}
@@ -233,7 +237,8 @@ export default function AddProduct() {
                   }
                 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Select Company" />
+                  <TextField  
+  required {...params} label="Select Company" />
                 )}
                 renderOption={(props, supplier) => (
                   <Box component="li" {...props} key={supplier._id}>
@@ -244,87 +249,114 @@ export default function AddProduct() {
                 <FormHelperText style={{ color: "red" }}>{companyError}</FormHelperText>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Name"
                 fullWidth
                 variant="outlined"
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) => {setName(event.target.value)
+                  setNameError("");
+                 } }
               />
               <FormHelperText style={{ color: "red" }}>{nameError}</FormHelperText>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Packing"
                 fullWidth
                 variant="outlined"
                 value={packing}
-                onChange={(event) => setPacking(event.target.value)}
+                onChange={(event) => {setPacking(event.target.value)
+                setPackingError("");
+                }}
               />
               <FormHelperText style={{ color: "red" }}>{packingError}</FormHelperText>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                label="Strength"
-                fullWidth
-                variant="outlined"
-                value={strength}
-                onChange={(event) => setStrength(event.target.value)}
-              />
-              <FormHelperText style={{ color: "red" }}>{strengthError}</FormHelperText>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                label="Trade Rate"
-                fullWidth
-                type="number"
-                variant="outlined"
-                value={tradeRate}
-                onChange={(event) => setTradeRate(event.target.value)}
-              />
-              <FormHelperText style={{ color: "red" }}>{tradeRateError}</FormHelperText>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                label="Purchase Rate"
-                fullWidth
-                variant="outlined"
-                type="number"
-                value={purchaseRate}
-                onChange={(event) => setPurchaseRate(event.target.value)}
-              />
-              <FormHelperText style={{ color: "red" }}>{purchaseRateError}</FormHelperText>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                label="Retail Price (Max)"
-                fullWidth
-                type="number"
-                variant="outlined"
-                value={maximumRetailPrice}
-                onChange={(event) => setMaximumRetailPrice(event.target.value)}
-              />
-              <FormHelperText style={{ color: "red" }}>{maximumRetailPriceError}</FormHelperText>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                label="Distributer Price"
-                fullWidth
-                type="number"
+  <TextField  
+  required
+    label="Strength"
+    fullWidth
+    variant="outlined"
+    value={strength}
+    onChange={(event) => {
+      setStrength(event.target.value);
+      setStrengthError(""); 
+    }}
+  />
+  <FormHelperText style={{ color: "red" }}>{strengthError}</FormHelperText>
+</Grid>
 
-                variant="outlined"
-                value={distributerPrice}
-                onChange={(event) => setDistributerPrice(event.target.value)}
-              />
-              <FormHelperText style={{ color: "red" }}>{distributerPriceError}</FormHelperText>
-            </Grid>
+<Grid item xs={12} sm={6}>
+  <TextField  
+  required
+
+    label="Trade Rate"
+    fullWidth
+    type="number"
+    variant="outlined"
+    value={tradeRate}
+    onChange={(event) => {
+      setTradeRate(event.target.value);
+      setTradeRateError("");
+    }}
+  />
+  <FormHelperText style={{ color: "red" }}>{tradeRateError}</FormHelperText>
+</Grid>
+
+<Grid item xs={12} sm={6}>
+  <TextField  
+  required
+
+    label="Purchase Rate"
+    fullWidth
+    variant="outlined"
+    type="number"
+    value={purchaseRate}
+    onChange={(event) => {
+      setPurchaseRate(event.target.value);
+      setPurchaseRateError(""); 
+    }}
+  />
+  <FormHelperText style={{ color: "red" }}>{purchaseRateError}</FormHelperText>
+</Grid>
+
+<Grid item xs={12} sm={6}>
+  <TextField  
+  required
+
+    label="Retail Price (Max)"
+    fullWidth
+    type="number"
+    variant="outlined"
+    value={maximumRetailPrice}
+    onChange={(event) => {
+      setMaximumRetailPrice(event.target.value);
+      setMaximumRetailPriceError(""); 
+    }}
+  />
+  <FormHelperText style={{ color: "red" }}>{maximumRetailPriceError}</FormHelperText>
+</Grid>
+
+<Grid item xs={12} sm={6}>
+  <TextField  
+  required
+
+    label="Distributer Price"
+    fullWidth
+    type="number"
+    variant="outlined"
+    value={distributerPrice}
+    onChange={(event) => {
+      setDistributerPrice(event.target.value);
+      setDistributerPriceError(""); 
+    }}
+  />
+  <FormHelperText style={{ color: "red" }}>{distributerPriceError}</FormHelperText>
+</Grid>
+
             <Grid item xs={12} sm={6}></Grid>
             <Grid item xs={12} sm={6}>
               <Grid

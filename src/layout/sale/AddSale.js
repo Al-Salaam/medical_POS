@@ -26,7 +26,6 @@ import { useReactToPrint } from "react-to-print";
 import Popup from "../../components/popup/Popup";
 import { FormControlLabel, Radio, RadioGroup } from "@material-ui/core";
 import ListHeader from "../../components/listHeader/ListHeader";
-import { index } from "d3-array";
 
 export default function AddSale() {
   const componentRef = useRef();
@@ -49,13 +48,15 @@ export default function AddSale() {
     netTotal: "",
     status: "",
     productCode: "",
+    productPacking: "",
+    productStrength: "",
   });
   const [data, setData] = useState([productObject]);
   const [supplierObject, setSupplierObject] = useState({});
   const [batchObject, setBatchObject] = useState({});
   const [DateAndQuantityObject, setDateAndQuantityObject] = useState([]);
   const [openInvoicePopup, setOpenInvoicePopup] = useState(false);
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState([]);
   const [totalBags, setTotalBags] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
   const [SalesManList, setSalesManList] = useState([]);
@@ -74,6 +75,7 @@ export default function AddSale() {
   const [discountValues, setDiscountValues] = useState({});
   const [salesTaxValues, setSalesTaxValues] = useState({});
   const [totalValues, setTotalValues] = useState(0);
+  const [finalTotal, setFinalTotal] = useState([]);
 
   const paymentMediumList = [
     {
@@ -160,14 +162,29 @@ export default function AddSale() {
       return totalValue;
     });
 
+    const calAmount = calculatedValues.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+
+    const additionalSaleAmount = (calAmount * invoiceSalesTax) / 100;
+    // console.log("additonal sales amount = ", additionalSaleAmount);
+    // console.log("invoice amount = ", invoiceSalesTax);
+    // const additionalSaleAmount = (totalValues * additionalSalePercentage) / 100;
+    const finalTotal = calAmount + additionalSaleAmount;
+
     // Update the totalValues state
     setTotalValues(calculatedValues);
-  }, [quantityValues, tradeRateValues, data]);
+    // console.log("calculated values = ", calculatedValues);
+    // console.log("Toal values = ", totalValues);
+    setFinalTotal(finalTotal);
+  }, [quantityValues, tradeRateValues, data, invoiceSalesTax]);
 
   const dataEntry = (data) => {
     axios
       .post(ADD_SALES_SERVICES, data)
       .then((response) => {
+        // console.log(data);
         // console.log(JSON.stringify(response, null, 2));
         if (response.status == 200) {
           setOpen(true);
@@ -190,6 +207,7 @@ export default function AddSale() {
       .get(GET_PRODUCT_OF_INVENTORY)
       .then(function (response) {
         setProductList(response.data.data);
+        console.log("product = ", response.data.data);
       })
       .catch(function (error) {
         setOpen(true);
@@ -204,7 +222,7 @@ export default function AddSale() {
         productCode: productCode,
       })
       .then(function (response) {
-        console.log("batchlist =", response.data);
+        // console.log("batchlist =", response.data);
         const filteredBatchList = response.data.data.filter(
           (entry) => entry.quantity !== 0 && entry.quantity !== null
         );
@@ -221,7 +239,7 @@ export default function AddSale() {
             return 0; // no change in order
           }
         });
-        console.log(sortedBatchList);
+        // console.log(sortedBatchList);
         setBatchList(sortedBatchList);
       })
       .catch(function (error) {
@@ -407,7 +425,25 @@ export default function AddSale() {
 
     // console.log("purchase object ", JSON.stringify(purchaseObject, null, 2));
     dataEntry(purchaseObject);
+
+    handleAddSale();
   };
+
+  const handleAddSale = () => {
+
+    // Reset the state variables to empty values
+    setPaymentMediumObject("");
+    setQuantityValues([""]);
+    setBonusValues([""]);
+    setTradeRateValues([""]);  
+    setSalesTaxValues([""]);
+    setTotalValues([""]);
+    setTradeRateValues([""]);
+    setInvoiceSalesTax("");
+    setInvoiceDiscount("");
+    setInvoiceAmount("");
+  };
+  
   // Function to format date to "yyyy-MM-dd" format
   function formatDate(date) {
     const d = new Date(date);
@@ -425,9 +461,16 @@ export default function AddSale() {
     var totalAmount = 0;
     for (let i = 0; i < data.length; i++) {
       totalAmount = totalAmount + data[i].tradeRate * data[i].quantity;
+      // totalAmount =
+      //   totalAmount + isNaN(parseFloat(data[i].bonus))
+      //     ? quantityValues[i] * tradeRateValues[i]
+      //     : (quantityValues[i] - parseFloat(data[i].bonus)) *
+      //       tradeRateValues[i];
     }
     const additionalSaleAmount = (totalAmount * additionalSalePercentage) / 100;
+    // const additionalSaleAmount = (totalValues * additionalSalePercentage) / 100;
     const calAmount = totalAmount + additionalSaleAmount;
+    // const calAmount = totalValues + additionalSaleAmount;
     return calAmount;
   };
 
@@ -476,7 +519,8 @@ export default function AddSale() {
                   setSupplierObject(newInputValue);
                 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Select Customer" />
+                  <TextField  
+  required {...params} label="Select Customer" />
                 )}
                 renderOption={(props, supplier) => (
                   <Box component="li" {...props} key={supplier._id}>
@@ -494,11 +538,13 @@ export default function AddSale() {
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 onChange={(event, newInputValue) => {
                   if (newInputValue !== null) {
+                    // 
                     setPaymentMediumObject(newInputValue);
                   }
                 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Select Payment Medium" />
+                  <TextField  
+  required {...params} label="Select Payment Medium" />
                 )}
                 renderOption={(props, payment) => (
                   <Box component="li" {...props} key={payment.id || ""}>
@@ -520,7 +566,8 @@ export default function AddSale() {
                   setSaleManObject(newInputValue);
                 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Select salesman" />
+                  <TextField  
+  required {...params} label="Select salesman" />
                 )}
                 renderOption={(props, saleMan) => (
                   <Box component="li" {...props} key={saleMan._id}>
@@ -557,7 +604,10 @@ export default function AddSale() {
                             var productObject = newInputValue;
                             setData((currentData) =>
                               produce(currentData, (v) => {
-                                v[index].productCode = productObject._id;
+                                v[index].productCode = productObject.code;
+                                v[index].productPacking = productObject.packing;
+                                v[index].productStrength =
+                                  productObject.strength;
                               })
                             );
                             getBatchList(productObject._id, index);
@@ -565,7 +615,8 @@ export default function AddSale() {
                           }
                         }}
                         renderInput={(params) => (
-                          <TextField {...params} label="Select Product" />
+                          <TextField  
+  required {...params} label="Select Product" />
                         )}
                         renderOption={(props, product) => (
                           <Box
@@ -603,7 +654,8 @@ export default function AddSale() {
                           }
                         }}
                         renderInput={(params) => (
-                          <TextField {...params} label="Select Batch" />
+                          <TextField  
+  required {...params} label="Select Batch" />
                         )}
                         renderOption={(props, batch) => (
                           <Box
@@ -626,7 +678,8 @@ export default function AddSale() {
                     </Grid>
 
                     <Grid item md={1.5} px={1}>
-                      <TextField
+                      <TextField  
+  required
                         // label="Expiry Date"
                         variant="outlined"
                         type="date"
@@ -649,7 +702,8 @@ export default function AddSale() {
                     </Grid>
 
                     <Grid item md={1} px={1}>
-                      <TextField
+                      <TextField  
+  required
                         label="Quantity"
                         variant="outlined"
                         value={quantityValues[index] || ""}
@@ -671,7 +725,8 @@ export default function AddSale() {
                     </Grid>
 
                     <Grid item md={1} px={1}>
-                      <TextField
+                      <TextField  
+  required
                         label="Discount"
                         variant="outlined"
                         value={discountValues[index] || ""}
@@ -701,7 +756,8 @@ export default function AddSale() {
                     </Grid>
 
                     {/* <Grid item md={1} px={1}>
-                      <TextField
+                      <TextField  
+  required
                         label="Discount"
                         variant="outlined"
                         value={product.discount}
@@ -718,7 +774,8 @@ export default function AddSale() {
                     </Grid> */}
 
                     <Grid item md={1} px={1}>
-                      <TextField
+                      <TextField  
+  required
                         label="Bonus"
                         variant="outlined"
                         value={bonusValues[index] || ""}
@@ -741,7 +798,8 @@ export default function AddSale() {
                     </Grid>
 
                     {/* <Grid item md={1} px={1}>
-                      <TextField
+                      <TextField  
+  required
                         label="Bonus"
                         variant="outlined"
                         value={product.bonus}
@@ -758,7 +816,8 @@ export default function AddSale() {
                     </Grid> */}
 
                     <Grid item md={1} px={1}>
-                      <TextField
+                      <TextField  
+  required
                         label="Sales Tax"
                         variant="outlined"
                         value={salesTaxValues[index] || ""}
@@ -790,7 +849,8 @@ export default function AddSale() {
                     </Grid>
 
                     {/* <Grid item md={1} px={1}>
-                      <TextField
+                      <TextField  
+  required
                         label="Sales Tax"
                         variant="outlined"
                         value={product.salesTax}
@@ -806,7 +866,8 @@ export default function AddSale() {
                     </Grid> */}
 
                     <Grid item md={1.2} px={1}>
-                      <TextField
+                      <TextField  
+  required
                         label="Trade Rate"
                         variant="outlined"
                         value={tradeRateValues[index] || ""}
@@ -833,7 +894,8 @@ export default function AddSale() {
                     </Grid>
 
                     <Grid item md={1} px={1}>
-                      <TextField
+                      <TextField  
+  required
                         label="Sub Total"
                         variant="outlined"
                         // value={
@@ -843,8 +905,7 @@ export default function AddSale() {
                         //         parseFloat(data[index].bonus)) *
                         //       tradeRateValues[index]
                         // }
-
-                        value={totalValues}
+                        value={totalValues[index]}
                         disabled
                       />
                     </Grid>
@@ -910,8 +971,8 @@ export default function AddSale() {
         >
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
-              <TextField
-                required
+              <TextField  
+  required
                 label={"Additional Sales Tax %"}
                 fullWidth
                 variant="outlined"
@@ -920,8 +981,8 @@ export default function AddSale() {
               />
             </Grid>
             <Grid item xs={12} sm={12}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Discount"
                 fullWidth
                 variant="outlined"
@@ -931,8 +992,8 @@ export default function AddSale() {
               />
             </Grid>
             <Grid item xs={12} sm={12}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Amount Recieved"
                 fullWidth
                 variant="outlined"
@@ -1044,7 +1105,8 @@ export default function AddSale() {
                     right: 50,
                   }}
                 >
-                  {calculateTotalAmount() - invoiceDiscount}
+                  {/* {calculateTotalAmount() - invoiceDiscount} */}
+                  {finalTotal - invoiceDiscount || 0}
                 </Typography>
               </Typography>
             </Grid>
@@ -1189,15 +1251,14 @@ const ComponentToPrint = React.forwardRef(
     data.map((item) => (totalSalesTax += Number(item.salesTax)));
     data.map((item) => (totalTradeRate += Number(item.tradeRate)));
 
+    console.log("data = ", data);
+
     return (
       <div ref={ref}>
         {isEstimated ? null : (
           <header class="header">
-            <h1>PHARMA NET</h1>
-            <p>
-              Jamia Farqania Road Sarfaraz Colony Opp. SK Products Factory
-              Gujranwala
-            </p>
+            <h1>BHC PHARMA</h1>
+            <p>Opposite Medicare Hospital Gill Road, Gujranwala</p>
             <p>
               PH:-055-4294521-2-0300-7492093-0302-6162633 E-mail
               pharmanet@yahoo.com
@@ -1232,16 +1293,16 @@ const ComponentToPrint = React.forwardRef(
           <table>
             <thead>
               <tr>
-                <th>QTY</th>
-                <th>Name of Item</th>
-                <th>Packing</th>
+                <th>Product Code</th>
                 <th>Batch No</th>
-                <th>Rate</th>
-                <th>Gross Amount</th>
-                <th>Discount %</th>
+                <th>Packing</th>
+                <th>Strength</th>
+                <th>Expiry Date</th>
+                <th>QTY</th>
+                <th>Dis %</th>
+                <th>Bonus</th>
                 <th>Sales Tax</th>
-                <th>Additional Tax</th>
-                <th>Advace Tax</th>
+                <th>Trade Rate</th>
                 <th>Total Amount</th>
               </tr>
             </thead>
@@ -1250,15 +1311,16 @@ const ComponentToPrint = React.forwardRef(
               {data.map((item, index) => {
                 return (
                   <tr key={index}>
-                    <td>{item.quantity}</td>
                     <td>{item.productCode}</td>
-                    <td>{item.bonus}</td>
                     <td>{item.batchCode}</td>
-                    <td>{item.tradeRate}</td>
-                    <td>{item.status}</td>
-                    <td>{item.discount}</td>
+                    <td>{item.productPacking}</td>
+                    <td>{item.productStrength}</td>
                     <td>{item.expiryDate}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.discount}</td>
+                    <td>{item.bonus}</td>
                     <td>{item.salesTax}</td>
+                    <td>{item.tradeRate}</td>
                     <td>{item.netTotal}</td>
                   </tr>
                 );

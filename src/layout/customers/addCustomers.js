@@ -129,6 +129,9 @@ export default function AddCustomers() {
     if (phone.trim() === "") {
       setPhoneError("Enter phone");
       isValid = false;
+    } else if (phone.trim().length < 11 || phone.trim().length > 13) {
+      setPhoneError("Phone number must be between 11 and 13 characters");
+      isValid = false;
     }
 
     if (address.trim() === "") {
@@ -139,15 +142,25 @@ export default function AddCustomers() {
     if (ntn.trim() === "") {
       setNtnError("Enter NTN");
       isValid = false;
+    } else if (/\s/.test(ntn)) {
+      setNtnError("NTN cannot contain spaces");
+      isValid = false;
     }
+    
 
     if (email.trim() === "") {
       setEmailError("Enter email");
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Enter a valid email address");
       isValid = false;
     }
 
     if (license.trim() === "") {
       setLicenseError("Enter license");
+      isValid = false;
+    } else if (/\s/.test(ntn)) {
+      setLicenseError("license cannot contain spaces");
       isValid = false;
     }
 
@@ -161,8 +174,12 @@ export default function AddCustomers() {
       isValid = false;
     }
 
+
     if (bankAccount.trim() === "") {
       setBankAccountError("Enter bank account");
+      isValid = false;
+    } else if (/\s/.test(ntn)) {
+      setBankAccountError("bank account cannot be only spaces");
       isValid = false;
     }
 
@@ -210,8 +227,9 @@ export default function AddCustomers() {
           </Typography>
           <Grid container spacing={3}>
             <Grid item xs={6} sm={6} md={6}>
-              <TextField
-                required
+              <TextField  
+  required
+
                 id="code"
                 name="code"
                 label="Code"
@@ -225,8 +243,9 @@ export default function AddCustomers() {
               </FormHelperText>
             </Grid>
             <Grid item xs={6} sm={6} md={6}>
-              <TextField
-                required
+              <TextField  
+  required
+                
                 id="name"
                 name="name"
                 label="Name"
@@ -240,8 +259,9 @@ export default function AddCustomers() {
               </FormHelperText>
             </Grid>
             <Grid item xs={6} sm={6} md={6}>
-              <TextField
-                required
+              <TextField  
+  required
+              
                 id="phone"
                 name="phone"
                 label="Phone"
@@ -256,8 +276,9 @@ export default function AddCustomers() {
               </FormHelperText>
             </Grid>
             <Grid item xs={6} sm={6} md={6}>
-              <TextField
-                required
+              <TextField  
+  required
+            
                 id="ntn"
                 name="ntn"
                 label="NTN"
@@ -271,8 +292,9 @@ export default function AddCustomers() {
               </FormHelperText>
             </Grid>
             <Grid item xs={6} sm={6} md={6}>
-              <TextField
-                required
+              <TextField  
+  required
+              
                 id="email"
                 name="email"
                 label="Email"
@@ -286,8 +308,9 @@ export default function AddCustomers() {
               </FormHelperText>
             </Grid>
             <Grid item xs={6} sm={6} md={6}>
-              <TextField
-                required
+              <TextField  
+  required
+              
                 id="license"
                 name="license"
                 label="License"
@@ -301,8 +324,9 @@ export default function AddCustomers() {
               </FormHelperText>
             </Grid>
             <Grid item xs={6} sm={6} md={6}>
-              <TextField
-                required
+              <TextField  
+  required
+               
                 id="licenseExpiryDate"
                 name="licenseExpiryDate"
                 label="License Expiry Date"
@@ -342,8 +366,9 @@ export default function AddCustomers() {
               </FormHelperText>
             </Grid>
             <Grid item xs={4} sm={3}>
-              <TextField
-                required
+              <TextField  
+  required
+                
                 id="bankAccount"
                 name="bankAccount"
                 label="Bank Account"
@@ -357,8 +382,9 @@ export default function AddCustomers() {
               </FormHelperText>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
+              <TextField  
+  required
+              
                 id="address"
                 name="address"
                 label="Address"

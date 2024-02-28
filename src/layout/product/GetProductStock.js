@@ -57,22 +57,20 @@ export default function GetProductStock() {
       if (selectedProduct) {
         setName(selectedProduct.name || "");
         setCode(selectedProduct.code || "");
-        setCompanyObject(selectedProduct.companyObject || "");
+        setCompanyObject(selectedProduct.companyObject || null); // Change from {} to null
         setPacking(selectedProduct.packing || "");
         setStrength(selectedProduct.strength || "");
         setTradeRate(selectedProduct.tradeRate || "");
         setPurchaseRate(selectedProduct.purchaseRate || "");
         setMaximumRetailPrice(selectedProduct.maximumRetailPrice || "");
         setDistributerPrice(selectedProduct.distributerPrice || "");
-  
-        // Set the selected company name for display
         setSelectedCompanyName(selectedProduct.companyObject?.name || "");
       }
     }
   }, [id, data]);
   
+  
   useEffect(() => {
-    // Set the initial value for Autocomplete
     if (companyObject && companyList) {
       const selectedCompany = companyList.find((company) => company._id === companyObject._id);
       if (selectedCompany) {
@@ -137,7 +135,7 @@ export default function GetProductStock() {
         // } else {
           setData(response.data.data);
 
-          console.log("data :",response.data.data);
+      
         // }
       })
       .catch(function (error) {
@@ -296,8 +294,8 @@ export default function GetProductStock() {
             <Grid item xs={12} sm={8}>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Code"
                 fullWidth
                 variant="outlined"
@@ -307,30 +305,30 @@ export default function GetProductStock() {
             </Grid>
             <Grid item xs={12} sm={6}>
             <Autocomplete
-        options={companyList}
-        getOptionLabel={(supplier) => supplier.name || ''}
-        getOptionSelected={(option, value) => option._id === value._id}
-        disablePortal
-        fullWidth
-        value={companyObject} // Use companyObject as the value
-        onChange={(event, newInputValue) => {
-          if (newInputValue !== null) {
-            setCompanyObject(newInputValue);
-            // Set the selected company name for display
-            setSelectedCompanyName(newInputValue.name);
-          }
-        }}
-        renderInput={(params) => <TextField {...params} label="Select Company" />}
-        renderOption={(props, supplier) => (
-          <Box component="li" {...props} key={supplier._id}>
-            {supplier.name}
-          </Box>
-        )}
-      />
+   getOptionSelected={(option, value) => option._id === value._id}
+  options={companyList}
+  getOptionLabel={(supplier) => supplier.name || ''}
+  disablePortal
+  fullWidth
+  value={companyObject} 
+  onChange={(event, newInputValue) => {
+    if (newInputValue !== null) {
+      setCompanyObject(newInputValue);
+      setSelectedCompanyName(newInputValue.name);
+    }
+  }}
+  renderInput={(params) => <TextField  
+  required {...params} label="Select Company" />}
+  renderOption={(props, supplier) => (
+    <Box component="li" {...props} key={supplier._id}>
+      {supplier.name}
+    </Box>
+  )}
+/>
             </Grid>
-            <Grid xs={12} sm={6}>
-              <TextField
-                required
+            <Grid item xs={12} sm={6}>
+              <TextField  
+  required
                 label="Name"
                 fullWidth
                 variant="outlined"
@@ -339,60 +337,66 @@ export default function GetProductStock() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Packing"
                 fullWidth
+                type="number"
                 variant="outlined"
                 value={packing}
                 onChange={(event) => setPacking(event.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Strength"
                 fullWidth
+                type="number"
                 variant="outlined"
                 value={strength}
                 onChange={(event) => setStrength(event.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Trade Rate"
                 fullWidth
+                type="number"
                 variant="outlined"
                 value={tradeRate}
                 onChange={(event) => setTradeRate(event.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Purchase Rate"
                 fullWidth
+                type="number"
                 variant="outlined"
                 value={PurchaseRate}
                 onChange={(event) => setPurchaseRate(event.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Retail Price (Max)"
                 fullWidth
+                type="number"
                 variant="outlined"
                 value={maximumRetailPrice}
                 onChange={(event) => setMaximumRetailPrice(event.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Distributer Price"
                 fullWidth
+                type="number"
                 variant="outlined"
                 value={distributerPrice}
                 onChange={(event) => setDistributerPrice(event.target.value)}
@@ -416,16 +420,6 @@ export default function GetProductStock() {
                     Save
                   </Button>
                 </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    color="error"
-                    onClick={() => setName("")}
-                  >
-                    Cancel
-                  </Button>
-                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -437,8 +431,8 @@ export default function GetProductStock() {
         >
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Quantity"
                 fullWidth
                 variant="outlined"
@@ -476,20 +470,6 @@ export default function GetProductStock() {
                     Save
                   </Button>
                 </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    color="error"
-                    onClick={() => {
-                      setQuantity("");
-                      setID("");
-                      setStockInOpenPopup(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -501,8 +481,8 @@ export default function GetProductStock() {
         >
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12}>
-              <TextField
-                required
+              <TextField  
+  required
                 label="Quantity"
                 fullWidth
                 variant="outlined"
@@ -538,20 +518,6 @@ export default function GetProductStock() {
                     }}
                   >
                     Save
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    color="error"
-                    onClick={() => {
-                      setQuantity("");
-                      setID("");
-                      setStockOutOpenPopup(false);
-                    }}
-                  >
-                    Cancel
                   </Button>
                 </Grid>
               </Grid>

@@ -324,21 +324,21 @@ export default function GetCustomersList() {
                 </Select>
               </FormControl>
             </Grid> */}
-            <Grid item xs={4} sm={3}>
-              <TextField
-                required
-                id="ntn"
-                name="ntn"
-                label="Ntn"
+           <Grid item xs={4} sm={3}>
+              <TextField  
+  required
+                id="code"
+                name="code"
+                label="Code"
                 fullWidth
                 variant="outlined"
-                value={ntn}
-                onChange={(event) => setNtn(event.target.value)}
+                value={code}
+                onChange={(event) => setCode(event.target.value)}
               />
             </Grid>
             <Grid item xs={4} sm={3}>
-              <TextField
-                required
+              <TextField  
+  required
                 id="name"
                 name="name"
                 label="Name"
@@ -349,8 +349,8 @@ export default function GetCustomersList() {
               />
             </Grid>
             <Grid item xs={4} sm={3}>
-              <TextField
-                required
+              <TextField  
+  required
                 id="phone"
                 name="phone"
                 label="Phone"
@@ -361,10 +361,21 @@ export default function GetCustomersList() {
                 onChange={(event) => setPhone(event.target.value)}
               />
             </Grid>
-
             <Grid item xs={4} sm={3}>
-              <TextField
-                required
+              <TextField  
+  required
+                id="ntn"
+                name="ntn"
+                label="Ntn"
+                fullWidth
+                variant="outlined"
+                value={ntn}
+                onChange={(event) => setNtn(event.target.value)}
+              />
+            </Grid>
+            <Grid item xs={4} sm={3}>
+              <TextField  
+  required
                 id="email"
                 name="email"
                 label="Email"
@@ -375,8 +386,8 @@ export default function GetCustomersList() {
               />
             </Grid>
             <Grid item xs={4} sm={3}>
-              <TextField
-                required
+              <TextField  
+  required
                 id="license"
                 name="license"
                 label="License"
@@ -387,8 +398,8 @@ export default function GetCustomersList() {
               />
             </Grid>
             <Grid item xs={4} sm={3}>
-              <TextField
-                required
+              <TextField  
+  required
                 id="licenseExpiryDate"
                 name="licenseExpiryDate"
                 label="License Expiry Date"
@@ -424,8 +435,8 @@ export default function GetCustomersList() {
             </Grid>
 
             <Grid item xs={4} sm={3}>
-              <TextField
-                required
+              <TextField  
+  required
                 id="bankAccount"
                 name="bankAccount"
                 label="Bank Account"
@@ -436,8 +447,8 @@ export default function GetCustomersList() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                required
+              <TextField  
+  required
                 id="address"
                 name="address"
                 label="Address"
@@ -445,18 +456,6 @@ export default function GetCustomersList() {
                 variant="outlined"
                 value={address}
                 onChange={(event) => setAddress(event.target.value)}
-              />
-            </Grid>
-            <Grid item xs={4} sm={3}>
-              <TextField
-                required
-                id="code"
-                name="code"
-                label="Code"
-                fullWidth
-                variant="outlined"
-                value={code}
-                onChange={(event) => setCode(event.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}></Grid>
@@ -475,16 +474,6 @@ export default function GetCustomersList() {
                     onClick={validation}
                   >
                     {id ? "Update" : "Add"}
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    color="error"
-                    onClick={() => setOpenPopup(false)}
-                  >
-                    Cancel
                   </Button>
                 </Grid>
               </Grid>
